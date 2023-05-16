@@ -190,7 +190,7 @@ postsList.addEventListener('click', (e) =>{
 btnSubmit.addEventListener('click', (e) => {
     e.preventDefault();
     fetch(`${url}/${id}`, {
-        method: 'PATCH',
+        method: 'PATCH',      
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
           },
@@ -225,4 +225,3 @@ addPostForm.addEventListener('submit', (e) => {
         renderPosts(dataArr);
     });
 }) 
-
