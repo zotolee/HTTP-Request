@@ -1,110 +1,50 @@
- const postsList = document.querySelector('.posts-list');
- const addPostForm = document.querySelector('.add-post');
- const titleValue = document.getElementById('title-value');
- const bodyValue = document.getElementById('body-value');
- const btnSubmit = document.querySelector('.btn');
- let output = '';
+//Create Event Listeners
+document.getElementById('name').addEventListener('blur', 
+validateName);
+document.getElementById('zip').addEventListener('blur', 
+validateZip);
+document.getElementById('email').addEventListener('blur', 
+validateEmail);
+document.getElementById('phone').addEventListener('blur', 
+validatePhone);
 
- 
-const renderPosts = (posts) => {  
-posts.slice(0,6).forEach(post => {
-    output += `
-    <div class="card col-md-6 bg-light mt-3" >
-    <div class="card-body" data-id=${post.id}>
-      <h6 class="card-subtitle mb-2 text-muted">${post.title}</h6>
-      <p class="card-text">${post.body}</p>
-      <button class="card-link" id="edit-post">EDIT</button>
-      <button href="#" class="card-link" id="delete-post">DELETE</button>
-    </div>
-  </div>
-    `;
-});
-    postsList.innerHTML = output;
+function validateName(){
+    const name = document.getElementById('name');
+    const re = /^[a-zA-Z]{2,10}$/; // name must be within 15 charaters and not more. it can include lower or uppercase too.
+
+    if(!re.test(name.value)){
+        name.classList.add('is-invalid');
+    } else {
+        name.classList.remove('is-invalid');
+    }
 }
- const url = 'https://jsonplaceholder.typicode.com/posts';
+function validateZip() {
+    const zip = document.getElementById('zip');
+    const re = /^[0-9]{5}(-[0-9]{4})?$/; // zip number must be between 0-9 and not more than 5numbers, if it's going to be more than 5numbers, it must have a - and 4numbers added. not more than 4 numbers orelse it'll be invalid.
 
-//Get - Read the posts
-// Method: GET
-fetch(url)
-.then((res) => res.json())
-.then(data => renderPosts(data))
-
-let postToEditId;
-postsList.addEventListener('click', (e) =>{
-    e.preventDefault();
-    let delBtnPressed = e.target.id === 'delete-post';
-    let editBtnPressed = e.target.id === 'edit-post';
-
-    let id = e.target.parentElement.dataset.id;
-    
-    //Delete - Remove the existing post
-    //Method: DELETE
-    if(delBtnPressed) {
-        console.log(id);
-       fetch(`${url}/${id}`, {
-            method: 'DELETE',
-        })
-        .then(res => res.json())
-        .then(() => location.reload())  
-    } 
-
-    if(editBtnPressed) {
-        const parent = e.target.parentElement;
-        let titleContent = parent.querySelector('.card-subtitle').textContent;
-        let bodyContent = parent.querySelector('.card-text').textContent;
-        postToEditId = id;
-        
-
-        titleValue.value = titleContent;
-        bodyValue.value = bodyContent;
-        btnSubmit.textContent = 'Edit Post';
+    if(!re.test(zip.value)){
+        zip.classList.add('is-invalid');
+    } else {
+        zip.classList.remove('is-invalid');
     }
-});
-//Update - update the existing post
-//Method: PATCH
+}
+function validateEmail() {
+    const email = document.getElementById('email');
+    const re = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-z]{2,5})$/; // email will work with @ and . 
 
-addPostForm.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (btnSubmit.textContent === 'Edit Post'){
-        console.log(postToEditId, 3);
-    fetch(`${url}/${postToEditId}`, {
-        method: 'PUT',      
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-        body: JSON.stringify({
-          title: titleValue.value,
-          body: bodyValue.value,
-        })
-    }) 
-        .then(res => res.json())
-        .then((data) => console.log(data));
-        setTimeout(() => {
-            btnSubmit.textContent = 'Add Post';
-        }, 2000);
-    } else if (btnSubmit.textContent === 'Add Post') {
-//create - insert new post
-//Method: POST
-fetch(url, {
-    method: 'POST',
-    headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    body: JSON.stringify({
-      title: titleValue.value,
-      body: bodyValue.value,
-    }),
-    
-})
-.then((res) => res.json())
-.then((data) => {
-    const dataArr = []; 
-    dataArr.push(data);
-    renderPosts(dataArr);
-});
-
-//reset input field
-titleValue.value = '';
-bodyValue.value = '';
+    if(!re.test(email.value)) {
+        email.classList.add('is-invalid');
+    } else {
+        email.classList.remove('is-invalid');
     }
-});
+}
+function validatePhone() {
+    const phone = document.getElementById('phone');
+    const re = /^\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{4}$/; // number will be in either of this formats: 704 103 0858, 704-103-0858 or 704.103.0858 
+
+    if(!re.test(phone.value)){
+        phone.classList.add('is-invalid');
+    } else {
+        phone.classList.remove('is-invalid');
+    }
+}
